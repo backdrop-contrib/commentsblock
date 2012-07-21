@@ -89,18 +89,24 @@ function commentsblock_block_view($delta) {
 
         $node = menu_get_object('node');
 
-        // Only display the form if we are allowed to post comments.
-        if (user_access('post comments') && $node->comment > 1) {
+        // Display comments and form
+        if ($node->comment == COMMENT_NODE_OPEN) {
           $block['subject'] = t('Post new comment');
 
-          if ($display_option == 0) {
+          // Only display the form if user is allowed to post
+          if ($display_option == 0 && user_access('post comments')) {
             //load only the form
             $block['content'] = drupal_get_form("comment_node_{$node->type}_form", (object)array('nid' => $node->nid));
           }
           else {
-            //load form+all comments
+            //load form along with all comments
             $block['content'] = comment_node_page_additions($node);
           }
+        }
+        // Display comments without form
+        else if ($node->comment == COMMENT_NODE_CLOSED) {
+          // load all comments (function checks if it should include form)
+          $block['content'] = comment_node_page_additions($node);
         }
 
       }
