@@ -158,7 +158,7 @@ function commentsblock_block_view($delta) {
 function comment_block_static_comments($nid, $build = false, $node = false) {
   $comments = &drupal_static(__FUNCTION__);
 
-  if ($build) {
+  if (isset($build['comments'])) {
     //would add $links above the comments title. Useful?
     //$comments[$nid]['links'] = $build['links']['comment'];
     $comments[$nid]['comments'] = $build['comments'];
