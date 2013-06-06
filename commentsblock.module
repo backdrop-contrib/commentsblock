@@ -27,6 +27,17 @@ function commentsblock_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_permission().
+ */
+function commentsblock_permission() {
+  return array(
+    'administer comment blocks' => array(
+      'title' => t('administer comment blocks'),
+      'description' => t('Administer comment blocks'),
+    ),
+  );
+}
 
 /**
  * Implementation of hook_views_api().
