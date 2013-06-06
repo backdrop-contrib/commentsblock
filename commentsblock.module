@@ -7,13 +7,12 @@
  * We can now easily sort stuff and add fields.
  *
  * Difference from 1.0. We now cache the contents in a variable instead of rendering them.
- * Concepttaken from: http://drupal.org/project/comment_block
+ * Concept taken from: http://drupal.org/project/comment_block
  */
 
-/*
- * implementation of hook_menu()
+/**
+ * Implements hook_menu().
  */
-
 function commentsblock_menu() {
   $items['admin/config/user-interface/commentsblock'] = array(
     'title' => 'Comments Block',
@@ -40,9 +39,12 @@ function commentsblock_permission() {
 }
 
 /**
- * Implementation of hook_views_api().
- * The view is automatically inlcuded via commentsblock_views_default_views() if path is correct see doku:
- * http://drupalcontrib.org/api/drupal/contributions--views--docs--views.api.php/function/hook_views_default_views/7
+ * Implements hook_views_api().
+ *
+ * The view is automatically included via commentsblock_views_default_views() 
+ * if path is correct see docs:
+ * 
+ * @link http://drupalcontrib.org/api/drupal/contributions--views--docs--views.api.php/function/hook_views_default_views/7
  */
 function commentsblock_views_api() {
   return array(
@@ -51,11 +53,10 @@ function commentsblock_views_api() {
   );
 }
 
-
 /**
- * Implementation of hook_view_alter().
+ * Implements hook_view_alter().
  *
- * This will make room for your custom comment view or block, by removing the regular
+ * This will make room for your custom comment view or block by removing the regular
  * comment listing from the node body.
  *
  * @todo the unset is not a good solution? maybe difficulties with other modules?
@@ -65,19 +66,16 @@ function commentsblock_node_view_alter(&$build) {
   comment_block_static_comments($build['#node']->nid, $build);
   unset($build['comments']);
 
-  //shows "Add comment on the bottom of the node"
+  // Shows "Add comment" on the bottom of the node.
   $hidelink = variable_get('commentsblock_display_link', 0);
   if($hidelink == 1) {
    unset($build['links']['comment']);
   }
 }
 
-
-
 /**
  * Implements hook_block_info().
  */
-
 function commentsblock_block_info() {
   $blocks = array();
   $blocks['comment_form_block'] = array(
@@ -94,7 +92,6 @@ function commentsblock_block_info() {
  * OR
  * We put form+comments in the form
  */
-
 function commentsblock_block_view($delta) {
   $block = array();
   $display_option = variable_get('commentsblock_display', '');
@@ -150,20 +147,21 @@ function commentsblock_block_view($delta) {
 
 /***************************************** HELPER ******************************/
 
-/*
- * This breaks just about every rule in the book, but our choices are to either rebuild the content or
- * or to have the node put the content into this static variable, then retrieve it from the block view
+/**
+ * This breaks just about every rule in the book, but our choices are to either 
+ * rebuild the content or to have the node put the content into this static variable, 
+ * then retrieve it from the block view.
  * For sake of performance, we choose the static variable
  */
 function comment_block_static_comments($nid, $build = false, $node = false) {
   $comments = &drupal_static(__FUNCTION__);
 
   if (isset($build['comments'])) {
-    //would add $links above the comments title. Useful?
-    //$comments[$nid]['links'] = $build['links']['comment'];
+    // @todo Would add $links above the comments title. Useful?
+    // $comments[$nid]['links'] = $build['links']['comment'];
     $comments[$nid]['comments'] = $build['comments'];
   } else {
-    #normal behavior will be that the node calls this function before
+    // Normal behavior will be that the node calls this function before.
     if (!isset($comments[$nid])) {
       $comments[$nid]['links'] = '';
       $comments[$nid]['comments'] = comment_node_page_additions($node);
@@ -171,9 +169,9 @@ function comment_block_static_comments($nid, $build = false, $node = false) {
     return $comments[$nid];
   }
 
-  //we remove the comments and only load the form if the user wants this
+  // We remove the comments and only load the form if the user wants this.
   $comment_form_only = variable_get('commentsblock_display', 0);
-  if($comment_form_only == 1) {
+  if ($comment_form_only == 1) {
     unset($comments[$nid]['comments']['comments']);
   }
 }
