@@ -102,8 +102,8 @@ function commentsblock_block_view($delta) {
   if ($delta == 'comment_form_block') {
     // Get the active menu object.
     if ($node = menu_get_object()) {
-      // Make sure user is viewing a node.
-      if ($node->comment == COMMENT_NODE_OPEN) {
+      // Make sure comments aren't closed.
+      if (($node->comment !== 0) && (arg(2) == NULL)) {
         // Render the comments and comment form (access checks, etc. are done
         // by comment_node_page_additions()).
         $block['content'] = drupal_render(comment_block_static_comments($node->nid, false, $node));
