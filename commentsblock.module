@@ -17,7 +17,7 @@ function commentsblock_menu() {
   $items['admin/config/user-interface/commentsblock'] = array(
     'title' => 'Comments Block',
     'description' => 'How to display the comments block',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('commentsblock_settings_form'),
     'access arguments' => array('administer comment blocks'),
     'file' => 'commentsblock.admin.inc',
@@ -49,12 +49,12 @@ function commentsblock_permission() {
 function commentsblock_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'commentsblock') . '/views',
+    'path' => backdrop_get_path('module', 'commentsblock') . '/views',
   );
 }
 
 /**
- * Implements hook_view_alter().
+ * Implements hook_comment_view_alter().
  *
  * This will make room for your custom comment view or block by removing the regular
  * comment listing from the node body.
@@ -63,11 +63,14 @@ function commentsblock_views_api() {
  */
 
 function commentsblock_node_view_alter(&$build) {
-  comment_block_static_comments($build['#node']->nid, $build);
-  unset($build['comments']);
-
-  // Shows "Add comment" on the bottom of the node.
-  $hidelink = variable_get('commentsblock_display_link', 0);
+  //first save the listing to put it into the view
+  comment_block_static_comments($build['#node']->nid, $build, $build['#node']);
+  //now remove the comment from the node
+  $node = menu_get_object();
+  unset($node->comments);
+  // Normally shows "Add comment" on the bottom of the node.
+  // Hide this if not required
+  $hidelink = config_get('commentsblock.settings','commentsblock_display_link');
   if($hidelink == 1) {
    unset($build['links']['comment']);
   }
@@ -80,7 +83,7 @@ function commentsblock_block_info() {
   $blocks = array();
   $blocks['comment_form_block'] = array(
     'info' => t('Comment form block'),
-    'cache' => DRUPAL_NO_CACHE,
+    'cache' => BACKDROP_NO_CACHE,
   );
   return $blocks;
 }
@@ -94,8 +97,7 @@ function commentsblock_block_info() {
  */
 function commentsblock_block_view($delta) {
   $block = array();
-  $display_option = variable_get('commentsblock_display', '');
-
+  $display_option = config_get('commentsblock.settings','commentsblock_display');
   if ($delta == 'comment_form_block') {
     // Get the active menu object.
     if ($node = menu_get_object()) {
@@ -103,44 +105,45 @@ function commentsblock_block_view($delta) {
       if (($node->comment !== 0) && (arg(2) == NULL)) {
         // Render the comments and comment form (access checks, etc. are done
         // by comment_node_page_additions()).
-        $block['content'] = drupal_render(comment_block_static_comments($node->nid, false, $node));
+		//$static_comments = comment_block_static_comments($node->nid, false, $node);
+        //$block['content'] = backdrop_render($static_comments);
       }
     }
   }
 
-/*  switch ($delta) {
+  switch ($delta) {
     case 'comment_form_block':
 
-      // Only nodes in page view.
+      // Only modify nodes in page view.
       if ((arg(0) == 'node') && is_numeric(arg(1)) && (arg(2) == NULL)) {
 
         $node = menu_get_object('node');
-
         // Display comments and form
-        if ($node->comment == COMMENT_NODE_OPEN) {
+		// Only display the form if user is allowed to post
+        if ($node->comment == 2) {//COMMENT_NODE_OPEN
           $block['subject'] = t('Post new comment');
 
-          // Only display the form if user is allowed to post
+		  // Check whether comments should be shown
           if ($display_option == 0 && user_access('post comments')) {
             //load only the form
-            $block['content'] = drupal_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid));
+            $block['content'] = backdrop_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid));
           }
-          else {
+          else if ($display_option == 1){
             //load form along with all comments
             $block['content'] = comment_node_page_additions($node);
           }
         }
         // Display comments without form
         else {
-          if ($node->comment == COMMENT_NODE_CLOSED) {
+		  // but only display them if currently allowed
+          if ($display_option == 1 && $node->comment == 1) {  //COMMENT_NODE_CLOSED
             // load all comments (function checks if it should include form)
             $block['content'] = comment_node_page_additions($node);
           }
         }
-
       }
       break;
-  }*/
+  }
   return $block;
 }
 
@@ -153,9 +156,9 @@ function commentsblock_block_view($delta) {
  * then retrieve it from the block view.
  * For sake of performance, we choose the static variable
  */
-function comment_block_static_comments($nid, $build = false, $node = false) {
-  $comments = &drupal_static(__FUNCTION__);
-
+function comment_block_static_comments($nid, $build, $node = false) {
+  $comments = &backdrop_static(__FUNCTION__);
+  
   if (isset($build['comments'])) {
     // @todo Would add $links above the comments title. Useful?
     // $comments[$nid]['links'] = $build['links']['comment'];
@@ -163,15 +166,27 @@ function comment_block_static_comments($nid, $build = false, $node = false) {
   } else {
     // Normal behavior will be that the node calls this function before.
     if (!isset($comments[$nid])) {
-      $comments[$nid]['links'] = '';
+	//user error : links is an invalid render
+      //$comments[$nid]['links'] = '';
       $comments[$nid]['comments'] = comment_node_page_additions($node);
     }
-    return $comments[$nid];
-  }
-
-  // We remove the comments and only load the form if the user wants this.
-  $comment_form_only = variable_get('commentsblock_display', 0);
+	
+	// We remove the comments and only load the form if the user wants this.
+  $comment_form_only = config_get('commentsblock.settings','commentsblock_display');
   if ($comment_form_only == 1) {
     unset($comments[$nid]['comments']['comments']);
+	}
+    return $comments[$nid];
   }
+}
+
+/**
+ * Implements hook_config_info().
+ */
+function commentsblock_config_info() {
+  $prefixes['commentsblock.settings'] = array(
+    'label' => t('Commentsblock settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
 }

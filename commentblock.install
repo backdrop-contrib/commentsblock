@@ -1,0 +1,21 @@
+<?php
+/**
+ * @file
+ * Install, update and uninstall functions for the commentsblock module.
+ *
+ */
+
+/**
+* Move commentsblock settings from variables to config.
+*/
+function commentsblock_update_1000() {
+// Migrate variables to config.
+  $config = config('commentsblock.settings');
+  $config->set('commentsblock_display', update_variable_get('commentsblock_display', ''));
+  $config->set('commentsblock_display_link', update_variable_get('commentsblock_display_link', '0'));
+  $config->save();
+
+// Delete variables.
+  update_variable_del('commentsblock_display');
+  update_variable_del('commentsblock_display_link');
+}
