@@ -9,7 +9,7 @@ There are options to suppress display of the 'add new comment' button from withi
 also to stop comments being shown to users who are not able to comment themselves.
 
 <h2>Status</h2>
-This port to Backdrop is ready for installation and testing
+This port to Backdrop is ready for installation and testing but is not yet proven reliable.
 
 
 
