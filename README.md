@@ -11,6 +11,15 @@ also to stop comments being shown to users who are not able to comment themselve
 <h2>Status</h2>
 This port to Backdrop is ready for installation and testing but is not yet proven reliable.
 
+<h2>Installation</h2>
+Install this module in the usual way.
+It will add its admin page 'Comments block' to the configuration menu under 'User interface'.
+Choose whether you want just the comments form to appear, or the comments as well.
+
+In the relevant layout add the new 'Comment form block' to wherever you want it to appear
+and set the conditions so that it only appears on required nodes.
+
+Finally, edit your node settings so that 'Comment settings' is 'open'.
 
 
 <h2>License</h2>
