@@ -1,6 +1,7 @@
 name = Comments block
 description = "Puts the comment form in a block and ads a default view for the comment listing. The view can be found in the views ui and is named 'Comments Block'."
 backdrop = 1.x
+type = module
 package = Theme Tools
 configure = admin/config/user-interface/commentsblock
 
