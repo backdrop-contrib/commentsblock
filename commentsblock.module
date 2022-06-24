@@ -126,7 +126,8 @@ function commentsblock_block_view($delta) {
 		  // Check whether comments should be shown
           if ($display_option == 0 && user_access('post comments')) {
             //load only the form
-            $block['content'] = backdrop_get_form("comment_node_{$node->type}_form", (object) array('nid' => $node->nid));
+            $comment = entity_create('comment', array('nid' => $node->nid));
+            $block['content'] = backdrop_get_form("comment_node_{$node->type}_form", $comment);
           }
           else if ($display_option == 1){
             //load form along with all comments
