@@ -1,0 +1,213 @@
+{
+    "_config_name": "views.view.comments_block",
+    "name": "comments_block",
+    "description": "Displays comments in a block",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "comment",
+    "human_name": "Comments Block 2",
+    "core": 7,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": {
+                        "query_comment": false
+                    }
+                },
+                "title": "Comments Block",
+                "use_more_text": "mehr",
+                "access": {
+                    "type": "perm"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic",
+                    "options": {
+                        "reset_button_label": "Zurücksetzen",
+                        "exposed_sorts_label": "Sortieren nach",
+                        "sort_asc_label": "Aufsteigend",
+                        "sort_desc_label": "Absteigend"
+                    }
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": "0"
+                    }
+                },
+                "style_plugin": "default",
+                "row_plugin": "fields",
+                "relationships": {
+                    "nid": {
+                        "id": "nid",
+                        "table": "comment",
+                        "field": "nid",
+                        "required": 1
+                    }
+                },
+                "fields": {
+                    "subject": {
+                        "id": "subject",
+                        "table": "comment",
+                        "field": "subject",
+                        "label": "",
+                        "alter": {
+                            "alter_text": 0,
+                            "make_link": 0,
+                            "absolute": 0,
+                            "word_boundary": 0,
+                            "ellipsis": 0,
+                            "strip_tags": 0,
+                            "trim": 0,
+                            "html": 0
+                        },
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "link_to_comment": 1
+                    },
+                    "name": {
+                        "id": "name",
+                        "table": "comment",
+                        "field": "name",
+                        "alter": {
+                            "alter_text": 0,
+                            "make_link": 0,
+                            "absolute": 0,
+                            "external": 0,
+                            "replace_spaces": 0,
+                            "trim_whitespace": 0,
+                            "nl2br": 0,
+                            "word_boundary": 1,
+                            "ellipsis": 1,
+                            "strip_tags": 0,
+                            "trim": 0,
+                            "html": 0
+                        },
+                        "element_label_colon": 1,
+                        "element_default_classes": 1,
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "link_to_user": 1
+                    },
+                    "comment_body": {
+                        "id": "comment_body",
+                        "table": "field_data_comment_body",
+                        "field": "comment_body",
+                        "alter": {
+                            "alter_text": 0,
+                            "make_link": 0,
+                            "absolute": 0,
+                            "external": 0,
+                            "replace_spaces": 0,
+                            "trim_whitespace": 0,
+                            "nl2br": 0,
+                            "word_boundary": 1,
+                            "ellipsis": 1,
+                            "strip_tags": 0,
+                            "trim": 0,
+                            "html": 0
+                        },
+                        "element_label_colon": 1,
+                        "element_default_classes": 1,
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "field_api_classes": 0
+                    },
+                    "created": {
+                        "id": "created",
+                        "table": "comment",
+                        "field": "created",
+                        "alter": {
+                            "alter_text": 0,
+                            "make_link": 0,
+                            "absolute": 0,
+                            "external": 0,
+                            "replace_spaces": 0,
+                            "trim_whitespace": 0,
+                            "nl2br": 0,
+                            "word_boundary": 1,
+                            "ellipsis": 1,
+                            "strip_tags": 0,
+                            "trim": 0,
+                            "html": 0
+                        },
+                        "element_label_colon": 1,
+                        "element_default_classes": 1,
+                        "hide_empty": 0,
+                        "empty_zero": 0,
+                        "hide_alter_empty": 1,
+                        "date_format": "long"
+                    }
+                },
+                "sorts": {
+                    "created": {
+                        "id": "created",
+                        "table": "comment",
+                        "field": "created",
+                        "order": "DESC"
+                    }
+                },
+                "arguments": {
+                    "nid": {
+                        "id": "nid",
+                        "table": "comment",
+                        "field": "nid",
+                        "default_action": "default",
+                        "default_argument_type": "node",
+                        "default_argument_skip_url": 0,
+                        "summary": {
+                            "number_of_records": "0",
+                            "format": "default_summary"
+                        },
+                        "summary_options": {
+                            "items_per_page": "25"
+                        },
+                        "break_phrase": 0,
+                        "not": 0
+                    }
+                },
+                "filters": {
+                    "status": {
+                        "id": "status",
+                        "table": "comment",
+                        "field": "status",
+                        "value": 1,
+                        "group": 0,
+                        "expose": {
+                            "operator": false
+                        }
+                    },
+                    "status_node": {
+                        "id": "status_node",
+                        "table": "node",
+                        "field": "status",
+                        "relationship": "nid",
+                        "value": 1,
+                        "group": 0,
+                        "expose": {
+                            "operator": false
+                        }
+                    }
+                }
+            }
+        },
+        "block": {
+            "display_title": "Block",
+            "display_plugin": "block",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                }
+            }
+        }
+    }
+}
