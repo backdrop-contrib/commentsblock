@@ -20,7 +20,7 @@ and set the conditions so that it only appears on required nodes.
 Finally, edit your node settings so that 'Comment settings' is 'open'.
 
 IMPORTANT: in that relevant layout, you may want to remove the `Main page content` block,
-since this block will always display the comment list and the comment form (you'll end up with duplicate comment list and form). 
+since the "Main page content" block at the moment will also display the comment list and the comment form (you'll end up with duplicate comment list and form). 
 Instead, you want to show only specific node fields such as `Body` in that area of the layout.
 
 License
