@@ -19,3 +19,17 @@ function commentsblock_update_1000() {
   update_variable_del('commentsblock_display');
   update_variable_del('commentsblock_display_link');
 }
+
+/** 
+ * Move settings to version 3.
+ */
+function commentsblock_update_1300() {
+  $config = config('commentsblock.settings');
+  $old_display_link = $config->get('commentsblock_display_link');
+  $config->set('commentsblock_hide_link', $old_display_link);
+  $config->clear('commentsblock_display_link');
+  $config->clear('commentsblock_display');
+  $config->set('commentsblock_hide_node_comments', 0);
+  $config->save();
+  backdrop_set_message(t('Comments Block version 1-x.3 now contains special block settings. Be sure to visit the layouts that use Comments Block to verify the settings are correct. Also visit the <a href="!config_page">configuration page</a> to verify global settings.', array('!config_page' => '/admin/config/user-interface/commentsblock')));
+}

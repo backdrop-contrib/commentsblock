@@ -1,5 +1,5 @@
 {
     "_config_name": "commentsblock.settings",
-    "commentsblock_display": "0",
-    "commentsblock_display_link": 1
+    "commentsblock_hide_link": 0,
+    "commentsblock_hide_node_comments": 0
 }
