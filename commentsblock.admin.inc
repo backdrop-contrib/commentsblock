@@ -7,36 +7,22 @@
 /**
  * Menu callback setting
  */
-
 function commentsblock_settings_form($form,$form_state) {
 
   $config = config('commentsblock.settings');
-
-  // Do we render comment form only or complete form+comments?
-  $options = array(
-    0 => t('Only load the comment form'),
-    1 => t('Load comments + comment form into a block'),
-  );
-  
-  $form['commentsblock_display'] = array(
-    '#type' => 'select',
-    '#title' => t('Render comment form only?'),
-    '#description' => t('Should the comments be shown together with the form?'),
-	'#default_value' => $config->get('commentsblock_display'),
-    '#options' => $options,
-  );
-  
-  $form['commentsblock_display_info'] = array(
-    '#type' => 'item',
-    '#title' => t('Info'),
-    '#markup' => '<p>If you choose <em>Only load the comment form</em>, <strong>ONLY</strong> the comment form is rendered into a block. You can then use the view shipped with the module to display the comments. Otherwise no comments will be shown.</p>',
-  );
-
-  $form['commentsblock_display_link'] = array(
+  $form['#config'] = 'commentsblock.settings'; 
+  $form['commentsblock_hide_link'] = array(
     '#type' => 'checkbox',
     '#title' => t('Hide "Add new comment"'),
     '#description' => t('Hides "Add new comment" at the node links. The "Add new comment" only appears if a minimum of one comment has already been posted'),
-    '#default_value' => $config->get('commentsblock_display_link'),
+    '#default_value' => $config->get('commentsblock_hide_link'),
+  );
+
+  $form['commentsblock_hide_node_comments'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Hide node comments and form'),
+    '#description' => t('Hides the normal list of comments and the comment form from the node display itself. Use if you use the "Main page content" block in your layout. WARNING: this setting will hide the comments and comment form for all nodes in all layouts.'),
+    '#default_value' => $config->get('commentsblock_hide_node_comments'),
   );
   
   // Add a submit button
@@ -46,15 +32,6 @@ function commentsblock_settings_form($form,$form_state) {
     '#value' => t('Save configuration'),
   );
 
-  // Return the form
-    return $form;
+  return system_settings_form($form);
 }
 
-// Add a submit function to process config
-function commentsblock_settings_form_submit($form, &$form_state) {
-    $config = config('commentsblock.settings');
-    $config->set('commentsblock_display', $form_state['values']['commentsblock_display']);
-    $config->set('commentsblock_display_link', $form_state['values']['commentsblock_display_link']);
-    $config->save();
-    backdrop_set_message(t('The configuration options have been saved.'));
-}
