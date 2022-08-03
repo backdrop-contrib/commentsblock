@@ -5,8 +5,12 @@ This module is a port to Backdrop of the Drupal contributed module 'Commentsbloc
 It puts the comments and the comment form from a module into a block which can then be placed 
 in a different location within a layout.
 
-There are options to suppress display of the 'add new comment' button from within the node, and
-also to stop comments being shown to users who are not able to comment themselves.
+Version 3
+----
+Version 3 is a rewrite of version 2 to better make use of Backdrop's block and layout APIs. It includes a setting at the 
+block level to specify whether the block should include only the comment form, or both full comment list and the form. When upgrading from version 2 from from Drupal 7, be sure to inspect the Comments Block blocks in all layouts to verify the settings are correct.
+
+Version 3 also includes a setting in the configuration page (admin/config/user-interface/commentsblock) to fully disable the display of comments and the comment form in all nodes globally. This setting is helpful when your layout uses a "Main page content" block, as this block will normally display the node, the comments and the comment form. WARNING: if you disable the display of comments and the comment form, they will not be shown in ANY node display regardless of whether they use a custom layout or not. This option is only useful for layouts that contain a Comments Block - otherwise your users will not be able to see or submit comments. 
 
 Installation
 ----
@@ -18,10 +22,6 @@ In the relevant layout add the new 'Comment form block' to wherever you want it 
 and set the conditions so that it only appears on required nodes.
 
 Finally, edit your node settings so that 'Comment settings' is 'open'.
-
-IMPORTANT: in that relevant layout, you may want to remove the `Main page content` block,
-since the "Main page content" block at the moment will also display the comment list and the comment form (you'll end up with duplicate comment list and form). 
-Instead, you want to show only specific node fields such as `Body` in that area of the layout.
 
 License
 ----
@@ -35,7 +35,6 @@ Current Maintainers
 For Drupal
 ----
 Isolesen ;  marcoka
-
 
 Port to Backdrop
 ----
